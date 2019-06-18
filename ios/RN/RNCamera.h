@@ -84,6 +84,7 @@
 - (void)setupOrDisableFaceDetector;
 - (void)setupOrDisableBarcodeDetector;
 - (void)onReady:(NSDictionary *)event;
+- (void)onVideoFrame:(NSDictionary *)event;
 - (void)onMountingError:(NSDictionary *)event;
 - (void)onCodeRead:(NSDictionary *)event;
 - (void)onFacesDetected:(NSDictionary *)event;

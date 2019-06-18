@@ -13,6 +13,8 @@
 
 RCT_EXPORT_MODULE(RNCameraManager);
 RCT_EXPORT_VIEW_PROPERTY(onCameraReady, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onVideoFrame, RCTDirectEventBlock);
+
 RCT_EXPORT_VIEW_PROPERTY(onMountError, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onBarCodeRead, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onFacesDetected, RCTDirectEventBlock);
@@ -78,7 +80,7 @@ RCT_EXPORT_VIEW_PROPERTY(onTextRecognized, RCTDirectEventBlock);
 
 - (NSArray<NSString *> *)supportedEvents
 {
-    return @[@"onCameraReady", @"onMountError", @"onBarCodeRead", @"onFacesDetected", @"onPictureSaved", @"onTextRecognized", @"onGoogleVisionBarcodesDetected"];
+    return @[@"onVideoFrame",@"onCameraReady", @"onMountError", @"onBarCodeRead", @"onFacesDetected", @"onPictureSaved", @"onTextRecognized", @"onGoogleVisionBarcodesDetected"];
 }
 
 + (NSDictionary *)validCodecTypes

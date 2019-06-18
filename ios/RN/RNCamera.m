@@ -20,6 +20,8 @@
 @property (nonatomic, strong) id barcodeDetector;
 
 @property (nonatomic, copy) RCTDirectEventBlock onCameraReady;
+@property (nonatomic, copy) RCTDirectEventBlock onVideoFrame;
+
 @property (nonatomic, copy) RCTDirectEventBlock onMountError;
 @property (nonatomic, copy) RCTDirectEventBlock onBarCodeRead;
 @property (nonatomic, copy) RCTDirectEventBlock onTextRecognized;
@@ -92,6 +94,13 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 {
     if (_onCameraReady) {
         _onCameraReady(nil);
+    }
+}
+
+- (void)onVideoFrame:(NSDictionary *)event
+{
+    if (_onVideoFrame) {
+        _onVideoFrame(nil);
     }
 }
 
