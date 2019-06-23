@@ -395,7 +395,7 @@ export default class Camera extends React.Component<PropsType, StateType> {
     faceDetectionLandmarks: PropTypes.number,
     faceDetectionClassifications: PropTypes.number,
     barCodeTypes: PropTypes.arrayOf(PropTypes.string),
-    pixelsToTrack:PropTypes.arrayOf([PropTypes.number, PropTypes.number])
+    pixelsToTrack:PropTypes.arrayOf(PropTypes.number),
     googleVisionBarcodeType: PropTypes.number,
     googleVisionBarcodeMode: PropTypes.number,
     type: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),

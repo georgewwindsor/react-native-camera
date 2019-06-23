@@ -59,7 +59,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
         self.startBarcode = [NSDate date];
         self.startPixel=[NSDate date];
         
-        self.pixelsToTrack=[NSArray init];
+        self.pixelsToTrack=[NSArray alloc];
         
         #if !(TARGET_IPHONE_SIMULATOR)
         self.previewLayer =
@@ -1314,6 +1314,11 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
     didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
            fromConnection:(AVCaptureConnection *)connection
 {
+    
+    
+    
+       NSLog(@"capture output");
+    
     if (![self.textDetector isRealDetector] && ![self.faceDetector isRealDetector] && ![self.barcodeDetector isRealDetector]) {
         NSLog(@"failing real check");
         return;
@@ -1336,15 +1341,18 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 
 
 
-    BOOL canScanPixels= timePassedSinceSubmittingForText > 0.2 && self.pixelsToTrack!=[NSNull null];
+    BOOL canScanPixels= timePassedSincePixel > 0.2 && self.pixelsToTrack!=[NSNull null];
     BOOL canSubmitForTextDetection = timePassedSinceSubmittingForText > 0.5 && _finishedReadingText && self.canReadText && [self.textDetector isRealDetector];
     BOOL canSubmitForFaceDetection = timePassedSinceSubmittingForFace > 0.5 && _finishedDetectingFace && self.canDetectFaces && [self.faceDetector isRealDetector];
     BOOL canSubmitForBarcodeDetection = timePassedSinceSubmittingForBarcode > 0.5 && _finishedDetectingBarcodes && self.canDetectBarcodes && [self.barcodeDetector isRealDetector];
+   
+    
+    NSLog(@"Can Scan Pixels %d", canScanPixels);
+    
     if (canScanPixels|| canSubmitForFaceDetection || canSubmitForTextDetection || canSubmitForBarcodeDetection) {
         NSLog(@"Can Scan Stuff");
 
-        self.startPixel = [NSDate date];
-
+       
         CGSize previewSize = CGSizeMake(_previewLayer.frame.size.width, _previewLayer.frame.size.height);
         NSInteger position = self.videoCaptureDeviceInput.device.position;
         UIImage *image = [RNCameraUtils convertBufferToUIImage:sampleBuffer previewSize:previewSize position:position];
@@ -1353,6 +1361,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
         float scaleY = _previewLayer.frame.size.height / image.size.height;
 
         if(canScanPixels){
+            self.startPixel = [NSDate date];
 
          NSLog(@"Can Scan Pixels");
          CGSize c=CGSizeMake(100,100);
@@ -1367,15 +1376,14 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 
         NSLog(@"Iterate image w  %f",imageT.size.width);
         NSLog(@"Iterate image h %f",imageT.size.height);
-        NSMutableArray* OutValues=[[NSMutableArray alloc] init];
+        NSMutableDictionary* OutValues=[[NSMutableDictionary alloc] init];
 
-        int x;
-
+            int x=0;
       for(NSDictionary* pixelSpot in self.pixelsToTrack){
+          x=x+1;
 
-
-      int xVal =pixelSpot [@"x"];
-      int yVal= pixelSpot [@"y"];
+      int xVal =pixelSpot[@"x"];
+      int yVal= pixelSpot[@"y"];
 
       NSLog(@"Iterate AirStrum  %d",xVal);
 
@@ -1394,14 +1402,19 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
       CFRelease(pixelData);
 
           NSString *xcolor = [self hexStringFromColor:color];
-
+          NSString *xstring =[NSString stringWithFormat:@"%i", x];
+          
        NSLog(@"Found Pixel Color  %@",xcolor);
-      [OutValues addObject:xcolor];
+          [OutValues setObject:xcolor forKey:xstring];
 
       }
 
-      [self onPixelsProcessed:OutValues];
+            
+            [self onPixelsProcessed:OutValues];
 
+            
+
+            
       }
 
 
