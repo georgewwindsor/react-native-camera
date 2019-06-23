@@ -32,6 +32,7 @@
 @property (nonatomic, assign) BOOL finishedDetectingBarcodes;
 @property (nonatomic, copy) NSDate *startText;
 @property (nonatomic, copy) NSDate *startFace;
+@property (nonatomic, copy) NSDate *startPixel;
 @property (nonatomic, copy) NSDate *startBarcode;
 
 @end
@@ -56,12 +57,16 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
         self.startText = [NSDate date];
         self.startFace = [NSDate date];
         self.startBarcode = [NSDate date];
-#if !(TARGET_IPHONE_SIMULATOR)
+        self.startPixel=[NSDate date];
+        
+        self.pixelsToTrack=[NSArray init];
+        
+        #if !(TARGET_IPHONE_SIMULATOR)
         self.previewLayer =
         [AVCaptureVideoPreviewLayer layerWithSession:self.session];
         self.previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
         self.previewLayer.needsDisplayOnBoundsChange = YES;
-#endif
+        #endif
         self.paused = NO;
         [self changePreviewOrientation:[UIApplication sharedApplication].statusBarOrientation];
         [self initializeCaptureSessionInput];
@@ -125,7 +130,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 }
 
 
-- (void)onPixels:(NSDictionary *)event
+- (void)onPixelsProcessed:(NSDictionary *)event
 {
     if (_onPixelsProcessed && _session) {
         _onPixelsProcessed(event);
@@ -1288,6 +1293,8 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 
 - (UIImage *)resizeImage:(UIImage *)image scaledToFillSize:(CGSize)size
 {
+    
+     NSLog(@"resize the image");
     CGFloat scale = MAX(size.width/image.size.width, size.height/image.size.height);
     CGFloat width = image.size.width * scale;
     CGFloat height = image.size.height * scale;
@@ -1334,7 +1341,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
     BOOL canSubmitForFaceDetection = timePassedSinceSubmittingForFace > 0.5 && _finishedDetectingFace && self.canDetectFaces && [self.faceDetector isRealDetector];
     BOOL canSubmitForBarcodeDetection = timePassedSinceSubmittingForBarcode > 0.5 && _finishedDetectingBarcodes && self.canDetectBarcodes && [self.barcodeDetector isRealDetector];
     if (canScanPixels|| canSubmitForFaceDetection || canSubmitForTextDetection || canSubmitForBarcodeDetection) {
-    NSLog(@"Can Scan Stuff  %d",xr)
+        NSLog(@"Can Scan Stuff");
 
         self.startPixel = [NSDate date];
 
@@ -1347,10 +1354,10 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 
         if(canScanPixels){
 
-         NSLog(@"Can Scan Pixels  %d",xr);
+         NSLog(@"Can Scan Pixels");
          CGSize c=CGSizeMake(100,100);
 
-         UIImage *imageT = [self.resizeImage:image scaledToFillSize:c];
+         UIImage *imageT = [self resizeImage:image scaledToFillSize:c];
 
 
 
@@ -1364,11 +1371,11 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 
         int x;
 
-      for(pixelSpot in self.pixelsToTrack){
+      for(NSDictionary* pixelSpot in self.pixelsToTrack){
 
 
-      int xVal = pixelSpot.x;
-      int yVal= pixelSpot.y;
+      int xVal =pixelSpot [@"x"];
+      int yVal= pixelSpot [@"y"];
 
       NSLog(@"Iterate AirStrum  %d",xVal);
 
@@ -1386,7 +1393,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 
       CFRelease(pixelData);
 
-       NSString *xcolor = [self.hexStringFromColor color]
+          NSString *xcolor = [self hexStringFromColor:color];
 
        NSLog(@"Found Pixel Color  %@",xcolor);
       [OutValues addObject:xcolor];

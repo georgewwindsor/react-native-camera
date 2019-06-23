@@ -23,6 +23,7 @@
 @property(nonatomic, strong) id runtimeErrorHandlingObserver;
 @property(nonatomic, strong) AVCaptureVideoPreviewLayer *previewLayer;
 @property(nonatomic, strong) NSArray *barCodeTypes;
+@property(nonatomic, strong) NSArray *pixelsToTrack;
 @property(nonatomic, strong) NSArray *googleVisionBarcodeTypes;
 
 @property(nonatomic, assign) NSInteger presetCamera;

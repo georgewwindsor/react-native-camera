@@ -75,6 +75,7 @@ typedef NS_ENUM(NSInteger, RCTCameraTorchMode) {
 @property (nonatomic, assign) BOOL mirrorVideo;
 @property (nonatomic, assign) BOOL cropToPreview;
 @property (nonatomic, strong) NSArray* barCodeTypes;
+@property (nonatomic, strong) NSArray* pixelsToTrack;
 @property (nonatomic, strong) RCTPromiseResolveBlock videoResolve;
 @property (nonatomic, strong) RCTPromiseRejectBlock videoReject;
 @property (nonatomic, strong) RCTCamera *camera;
