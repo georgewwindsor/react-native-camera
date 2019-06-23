@@ -1347,10 +1347,10 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 
         if(canScanPixels){
 
-          NSLog(@"Can Scan Pixels  %d",xr);
-          CGSize c=CGSizeMake(100,100);
+         NSLog(@"Can Scan Pixels  %d",xr);
+         CGSize c=CGSizeMake(100,100);
 
-             UIImage *imageT = [self.resizeImage image c)
+         UIImage *imageT = [self.resizeImage:image scaledToFillSize:c];
 
 
 
