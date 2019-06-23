@@ -20,7 +20,7 @@ const { shouldFaceDetect } = this.state;
 </RNCamera>
 ```
 
-Passing `null` to `onFaceDetected`, `onGoogleVisionBarcodesDetected`, `onTextRecognized`, `onBarCodeRead` automatically turns off the correspondent detector.
+Passing `null` to `onFaceDetected`, `onGoogleVisionBarcodesDetected`, `onTextRecognized`,`onPixelsProcessed`, `onBarCodeRead` automatically turns off the correspondent detector.
 
 ## Events continue if screen is mounted but not on top of stack
 
