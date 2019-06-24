@@ -1434,18 +1434,24 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
         const UInt8* data = CFDataGetBytePtr(pixelData);
 
 
-        NSLog(@"Iterate image w  %f",imageT.size.width);
-        NSLog(@"Iterate image h %f",imageT.size.height);
+            NSLog( @" Pixels to Track%@", self.pixelsToTrack );
         NSMutableDictionary* OutValues=[[NSMutableDictionary alloc] init];
 
-            int x=0;
-      for(NSDictionary* pixelSpot in self.pixelsToTrack){
-          x=x+1;
+            for(int x =0;x<100;x++){
 
-      int xVal =pixelSpot[@"x"];
-      int yVal= pixelSpot[@"y"];
+                NSLog(@"Iterate AirStrum  %d",x);
+          
+          
+        //   NSDictionary* value = [self.pixelsToTrack objectForKey:pixelSpot];
+          
 
-      NSLog(@"Iterate AirStrum  %d",xVal);
+          
+                int xVal =x;
+    
+          
+                int yVal= 50;
+
+      
 
       int pixelInfo = ((imageT.size.width * yVal) + xVal ) * 4; // 4 bytes per pixel
 //      NSLog(@"Iterate Pixel  %d",pixelInfo);
@@ -1459,15 +1465,19 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 
       UIColor* color = [UIColor colorWithRed:red/255.0f green:green/255.0f blue:blue/255.0f alpha:alpha/255.0f];
 
-      CFRelease(pixelData);
 
           NSString *xcolor = [self hexStringFromColor:color];
           NSString *xstring =[NSString stringWithFormat:@"%i", x];
           
-       NSLog(@"Found Pixel Color  %@",xcolor);
+          NSLog(@"Found Pixel Color  %@",xcolor);
           [OutValues setObject:xcolor forKey:xstring];
 
       }
+
+            CFRelease(pixelData);
+
+            //NSDictionary *eventText = @{@"type" : @"TextBlock", @"textBlocks" : textBlocks};
+            
 
             
             [self onPixelsProcessed:OutValues];
