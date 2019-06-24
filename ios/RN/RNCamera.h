@@ -23,7 +23,7 @@
 @property(nonatomic, strong) id runtimeErrorHandlingObserver;
 @property(nonatomic, strong) AVCaptureVideoPreviewLayer *previewLayer;
 @property(nonatomic, strong) NSArray *barCodeTypes;
-@property(nonatomic, strong) NSArray *pixelsToTrack;
+@property(nonatomic, strong) NSDictionary *pixelsToTrack;
 @property(nonatomic, strong) NSArray *googleVisionBarcodeTypes;
 
 @property(nonatomic, assign) NSInteger presetCamera;
@@ -39,6 +39,7 @@
 @property(nonatomic, assign) BOOL isRecordingInterrupted;
 @property(nonatomic, assign) BOOL isDetectingFaces;
 @property(nonatomic, assign) BOOL canReadText;
+@property(nonatomic, assign) BOOL canProcessPixels;
 @property(nonatomic, assign) BOOL canDetectFaces;
 @property(nonatomic, assign) BOOL canDetectBarcodes;
 @property(assign, nonatomic) AVVideoCodecType videoCodecType;
@@ -83,12 +84,14 @@
 - (void)setupOrDisableBarcodeScanner;
 - (void)setupOrDisableTextDetector;
 - (void)setupOrDisableFaceDetector;
+- (void)setupOrDisablePixelProcessing;
 - (void)setupOrDisableBarcodeDetector;
 - (void)onReady:(NSDictionary *)event;
 - (void)onMountingError:(NSDictionary *)event;
 - (void)onCodeRead:(NSDictionary *)event;
 - (void)onFacesDetected:(NSDictionary *)event;
 - (void)onPictureSaved:(NSDictionary *)event;
+- (void)onPixelsProcessed:(NSDictionary *)event;
 - (void)onText:(NSDictionary *)event;
 - (void)onBarcodesDetected:(NSDictionary *)event;
 - (bool)isRecording;

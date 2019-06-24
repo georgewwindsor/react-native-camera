@@ -550,7 +550,7 @@ RCT_EXPORT_METHOD(setZoom:(CGFloat)zoomFactor) {
     [self.session beginConfiguration];
 
     NSError *error = nil;
-      
+
     AVCaptureDevice *currentCaptureDevice = [self.videoCaptureDeviceInput device];
     AVCaptureDevice *captureDevice;
 
@@ -585,7 +585,7 @@ RCT_EXPORT_METHOD(setZoom:(CGFloat)zoomFactor) {
       else if (type == AVMediaTypeVideo) {
         [NSNotificationCenter.defaultCenter removeObserver:self name:AVCaptureDeviceSubjectAreaDidChangeNotification object:currentCaptureDevice];
         [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(subjectAreaDidChange:) name:AVCaptureDeviceSubjectAreaDidChangeNotification object:captureDevice];
-          
+
         self.videoCaptureDeviceInput = captureDeviceInput;
         [self setFlashMode];
       }
@@ -646,6 +646,9 @@ RCT_EXPORT_METHOD(setZoom:(CGFloat)zoomFactor) {
       [self.stillImageOutput captureStillImageAsynchronouslyFromConnection:[self.stillImageOutput connectionWithMediaType:AVMediaTypeVideo] completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
 
         if (imageDataSampleBuffer) {
+
+
+
           NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
 
           // Create image source
@@ -850,7 +853,7 @@ RCT_EXPORT_METHOD(setZoom:(CGFloat)zoomFactor) {
 
   dispatch_async(self.sessionQueue, ^{
     [[self.movieFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:orientation];
-    
+
     if (self.mirrorVideo) {
         [[self.movieFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoMirrored:YES];
     }
@@ -1026,7 +1029,7 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
 {
   CGPoint devicePoint = CGPointMake(.5, .5);
   [self focusWithMode:AVCaptureFocusModeContinuousAutoFocus exposeWithMode:AVCaptureExposureModeContinuousAutoExposure atDevicePoint:devicePoint monitorSubjectAreaChange:NO];
-    
+
   if (self.camera.camFocus)
   {
     [self.camera.camFocus removeFromSuperview];

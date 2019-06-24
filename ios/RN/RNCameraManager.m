@@ -270,6 +270,14 @@ RCT_CUSTOM_VIEW_PROPERTY(textRecognizerEnabled, BOOL, RNCamera)
     [view setupOrDisableTextDetector];
 }
 
+RCT_CUSTOM_VIEW_PROPERTY(pixelProcessingEnabled, BOOL, RNCamera)
+{
+    
+    view.canProcessPixels = [RCTConvert BOOL:json];
+    [view setupOrDisablePixelProcessing];
+}
+
+
 RCT_CUSTOM_VIEW_PROPERTY(defaultVideoQuality, NSInteger, RNCamera)
 {
     [view setDefaultVideoQuality: [NSNumber numberWithInteger:[RCTConvert NSInteger:json]]];
