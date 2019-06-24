@@ -618,7 +618,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
         if (self.presetCamera == AVCaptureDevicePositionUnspecified) {
             return;
         }
-
+ NSLog(@"Start Session");
         // Default video quality AVCaptureSessionPresetHigh if non is provided
         AVCaptureSessionPreset preset = ([self defaultVideoQuality]) ? [RNCameraUtils captureSessionPresetForVideoResolution:[[self defaultVideoQuality] integerValue]] : AVCaptureSessionPresetHigh;
 
@@ -636,11 +636,14 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
         // (see comment in -record), we go ahead and add the AVCaptureMovieFileOutput
         // to avoid an exposure rack on some devices that can cause the first few
         // frames of the recorded output to be underexposed.
-        if (![self.faceDetector isRealDetector] && ![self.textDetector isRealDetector] && ![self.barcodeDetector isRealDetector]) {
-            [self setupMovieFileCapture];
-        }
+       // if (![self.faceDetector isRealDetector] && ![self.textDetector isRealDetector] && ![self.barcodeDetector isRealDetector]) {
+      //      [self setupMovieFileCapture];
+      //  }
+        
+        
+        
         [self setupOrDisableBarcodeScanner];
-
+        [self setupOrDisablePixelProcessing];
         __weak RNCamera *weakSelf = self;
         [self setRuntimeErrorHandlingObserver:
          [NSNotificationCenter.defaultCenter addObserverForName:AVCaptureSessionRuntimeErrorNotification object:self.session queue:nil usingBlock:^(NSNotification *note) {
@@ -663,6 +666,9 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 #if TARGET_IPHONE_SIMULATOR
     return;
 #endif
+    
+    NSLog(@"Stop Session");
+    
     dispatch_async(self.sessionQueue, ^{
         if ([self.textDetector isRealDetector]) {
             [self stopTextRecognition];
@@ -1373,10 +1379,10 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 {
        NSLog(@"capture output ");
     
-    if (![self.textDetector isRealDetector] && ![self.faceDetector isRealDetector] && ![self.barcodeDetector isRealDetector]) {
-        NSLog(@"failing real check");
-        return;
-    }
+   // if (![self.textDetector isRealDetector] && ![self.faceDetector isRealDetector] && ![self.barcodeDetector isRealDetector]) {
+    //    NSLog(@"failing real check");
+   //     return;
+   // }
 
     // Do not submit image for text/face recognition too often:
     // 1. we only dispatch events every 500ms anyway
