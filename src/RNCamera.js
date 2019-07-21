@@ -764,7 +764,7 @@ export default class Camera extends React.Component<PropsType, StateType> {
             onBarCodeRead={this._onObjectDetected(this.props.onBarCodeRead)}
             onFacesDetected={this._onObjectDetected(this.props.onFacesDetected)}
             onTextRecognized={this._onObjectDetected(this.props.onTextRecognized)}
-            onPixelsProcessed={this.props.onPixelsProcessed}
+            onPixelsProcessed={this._onObjectDetected(this.props.onPixelsProcessed)}
             onPictureSaved={this._onPictureSaved}
           />
           {this.renderChildren()}
