@@ -323,10 +323,13 @@ class RCTCameraViewFinder extends TextureView implements TextureView.SurfaceText
      * See {Camera.PreviewCallback}
      */
     public void onPreviewFrame(byte[] data, Camera camera) {
-        if (RCTCamera.getInstance().isBarcodeScannerEnabled() && !RCTCameraViewFinder.barcodeScannerTaskLock) {
+        if ((RCTCamera.getInstance().isPixelEnabled() ||RCTCamera.getInstance().isBarcodeScannerEnabled()) && !RCTCameraViewFinder.barcodeScannerTaskLock) {
             RCTCameraViewFinder.barcodeScannerTaskLock = true;
             new ReaderAsyncTask(camera, data).execute();
         }
+
+
+
     }
 
     private class ReaderAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -355,6 +358,11 @@ class RCTCameraViewFinder extends TextureView implements TextureView.SurfaceText
             }
             return null;
         }
+
+
+
+
+
 
         private Result getBarcodeAnyOrientation() {
             Camera.Size size = camera.getParameters().getPreviewSize();

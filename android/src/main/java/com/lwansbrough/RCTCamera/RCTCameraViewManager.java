@@ -113,6 +113,11 @@ public class RCTCameraViewManager extends ViewGroupManager<RCTCameraView> {
     public void setBarcodeScannerEnabled(RCTCameraView view, boolean barcodeScannerEnabled) {
         view.setBarcodeScannerEnabled(barcodeScannerEnabled);
     }
+    @ReactProp(name = "onPixelsProcessed")
+    public void setPixelsEnabled(RCTCameraView view, boolean pixelsEnabled) {
+        view.setpixelsEnabled(pixelsEnabled);
+    }
+
 
     @ReactProp(name = "barCodeTypes")
     public void setBarCodeTypes(RCTCameraView view, ReadableArray barCodeTypes) {
