@@ -29,7 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class RNCameraView extends CameraView implements LifecycleEventListener, BarCodeScannerAsyncTaskDelegate, FaceDetectorAsyncTaskDelegate,
-    BarcodeDetectorAsyncTaskDelegate, TextRecognizerAsyncTaskDelegate, PictureSavedDelegate {
+    BarcodeDetectorAsyncTaskDelegate, TextRecognizerAsyncTaskDelegate,PixelsProcessedAsyncTaskDelegate, PictureSavedDelegate {
   private ThemedReactContext mThemedReactContext;
   private Queue<Promise> mPictureTakenPromises = new ConcurrentLinkedQueue<>();
   private Map<Promise, ReadableMap> mPictureTakenOptions = new ConcurrentHashMap<>();
@@ -49,6 +49,7 @@ public class RNCameraView extends CameraView implements LifecycleEventListener, 
   public volatile boolean faceDetectorTaskLock = false;
   public volatile boolean googleBarcodeDetectorTaskLock = false;
   public volatile boolean textRecognizerTaskLock = false;
+  public volatile boolean pixelsProcessedTaskLock = false;
 
   // Scanning-related properties
   private MultiFormatReader mMultiFormatReader;
@@ -58,6 +59,7 @@ public class RNCameraView extends CameraView implements LifecycleEventListener, 
   private boolean mShouldGoogleDetectBarcodes = false;
   private boolean mShouldScanBarCodes = false;
   private boolean mShouldRecognizeText = false;
+  private boolean mShouldScanPixels = false;
   private int mFaceDetectorMode = RNFaceDetector.FAST_MODE;
   private int mFaceDetectionLandmarks = RNFaceDetector.NO_LANDMARKS;
   private int mFaceDetectionClassifications = RNFaceDetector.NO_CLASSIFICATIONS;
@@ -124,6 +126,9 @@ public class RNCameraView extends CameraView implements LifecycleEventListener, 
       public void onFramePreview(CameraView cameraView, byte[] data, int width, int height, int rotation) {
         int correctRotation = RNCameraViewHelper.getCorrectCameraRotation(rotation, getFacing(), getCameraOrientation());
         boolean willCallBarCodeTask = mShouldScanBarCodes && !barCodeScannerTaskLock && cameraView instanceof BarCodeScannerAsyncTaskDelegate;
+
+        boolean willCallPixelTask = mShouldScanPixels && !pixelsProcessedTaskLock && cameraView instanceof PixelsProcessedAsyncTaskDelegate;
+
         boolean willCallFaceTask = mShouldDetectFaces && !faceDetectorTaskLock && cameraView instanceof FaceDetectorAsyncTaskDelegate;
         boolean willCallGoogleBarcodeTask = mShouldGoogleDetectBarcodes && !googleBarcodeDetectorTaskLock && cameraView instanceof BarcodeDetectorAsyncTaskDelegate;
         boolean willCallTextTask = mShouldRecognizeText && !textRecognizerTaskLock && cameraView instanceof TextRecognizerAsyncTaskDelegate;
@@ -133,6 +138,13 @@ public class RNCameraView extends CameraView implements LifecycleEventListener, 
 
         if (data.length < (1.5 * width * height)) {
             return;
+        }
+
+
+     if (willCallPixelTask) {
+          pixelsProcessedTaskLock = true;
+          PixelsProcessedAsyncTaskDelegate delegate = (PixelsProcessedAsyncTaskDelegate) cameraView;
+          new PixelsProcessedAsyncTask(delegate, mMultiFormatReader, data, width, height).execute();
         }
 
         if (willCallBarCodeTask) {
@@ -453,8 +465,14 @@ public class RNCameraView extends CameraView implements LifecycleEventListener, 
 
   public void setShouldRecognizeText(boolean shouldRecognizeText) {
     this.mShouldRecognizeText = shouldRecognizeText;
-    setScanning(mShouldDetectFaces || mShouldGoogleDetectBarcodes || mShouldScanBarCodes || mShouldRecognizeText);
+    setScanning(mShouldDetectFaces || mShouldGoogleDetectBarcodes || mShouldScanBarCodes || mShouldRecognizeText||mShouldScanPixels);
   }
+
+
+   public void setShouldScanPixels(boolean shouldRecognizeText) {
+      this.mShouldScanPixels = shouldRecognizeText;
+      setScanning(mShouldDetectFaces || mShouldGoogleDetectBarcodes || mShouldScanBarCodes || mShouldRecognizeText||mShouldScanPixels);
+    }
 
   public void
   onTextRecognized(WritableArray serializedData) {
@@ -476,6 +494,12 @@ public class RNCameraView extends CameraView implements LifecycleEventListener, 
   public void onTextRecognizerTaskCompleted() {
     textRecognizerTaskLock = false;
   }
+
+ @Override
+  public void onPixelsProcessedTaskCompleted() {
+    pixelsProcessedTaskLock = false;
+  }
+
 
   /**
   *
