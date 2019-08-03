@@ -416,11 +416,51 @@ class RCTCameraViewFinder extends TextureView implements TextureView.SurfaceText
                 if (result == null){
                     throw new Exception();
                 }
+  Camera.Size size = camera.getParameters().getPreviewSize();
 
+            int width = size.width;
+            int height = size.height;
                 ReactContext reactContext = RCTCameraModule.getReactContextSingleton();
                 WritableMap event = Arguments.createMap();
                 WritableArray resultPoints = Arguments.createArray();
                 ResultPoint[] points = result.getResultPoints();
+
+
+  if ((RCTCamera.getInstance().isPixelEnabled()){
+
+
+                //We Should now be able to send back the pixels in a reduced format
+
+
+
+
+                int xAmount = Math.floor(width/10);
+                int yAmount = Math.floor(height/10);
+
+
+                if(points != null) {
+                                    for (ResultPoint point : points) {
+
+if(point.getX()==xAmount||point.getX()==xAmount*10||point.getX()==xAmount*2||point.getX()==xAmount*3||point.getX()==xAmount*4||point.getX()==xAmount*5||point.getX()==xAmount*6||point.getX()==xAmount*7||point.getX()==xAmount*8||point.getX()==xAmount*9){
+if(point.getY()==yAmount||point.getY()==yAmount*10||point.getY()==yAmount*2||point.getY()==yAmount*3||point.getY()==yAmount*4||point.getY()==yAmount*5||point.getY()==yAmount*6||point.getY()==yAmount*7||point.getY()==yAmount*8||point.getY()==yAmount*9){
+
+                                        WritableMap newPoint = Arguments.createMap();
+                                        newPoint.putString("x", String.valueOf(point.getX()));
+                                        newPoint.putString("y", String.valueOf(point.getY()));
+                                        resultPoints.pushMap(newPoint);
+}
+
+                                    }
+                                }
+
+
+                                 Log.e("RCTCameraViewFinder", "Background processing");
+
+
+
+
+
+                }else{
 
                 if(points != null) {
                     for (ResultPoint point : points) {
@@ -431,10 +471,20 @@ class RCTCameraViewFinder extends TextureView implements TextureView.SurfaceText
                     }
                 }
 
+
+                 Log.e("RCTCameraViewFinder", "Background processing");
+
                 event.putArray("bounds", resultPoints);
                 event.putString("data", result.getText());
                 event.putString("type", result.getBarcodeFormat().toString());
+
                 reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("CameraBarCodeReadAndroid", event);
+                }
+
+
+
+
+
 
             } catch (Throwable t) {
                 // meh

@@ -468,9 +468,6 @@ public class RNCameraView extends CameraView implements LifecycleEventListener, 
 
   public void
     onPixelsProcessed(WritableArray serializedData) {
-      if (!mShouldRecognizeText) {
-        return;
-      }
 
       RNCameraViewHelper.emitPixelsProcessed(this, serializedData);
     }
