@@ -20,6 +20,7 @@ public class PixelsProcessedEvent extends Event<PixelsProcessedEvent> {
 
   private PixelsProcessedEvent() {}
 
+
   public static PixelsProcessedEvent obtain(int viewTag, WritableArray data) {
     PixelsProcessedEvent event = EVENTS_POOL.acquire();
     if (event == null) {
