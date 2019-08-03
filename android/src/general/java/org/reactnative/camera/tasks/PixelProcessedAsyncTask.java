@@ -45,6 +45,7 @@ public class PixelsProcessedAsyncTask extends android.os.AsyncTask<Void, Void, S
           int facing,
           int viewWidth,
           int viewHeight,
+          int viewHeight,
           int viewPaddingLeft,
           int viewPaddingTop
   ) {
@@ -74,9 +75,7 @@ public class PixelsProcessedAsyncTask extends android.os.AsyncTask<Void, Void, S
   @Override
   protected void onPostExecute(SparseArray<TextBlock> textBlocks) {
     super.onPostExecute(textBlocks);
-    if (mTextRecognizer != null) {
-      mTextRecognizer.release();
-    }
+
     if (textBlocks != null) {
       WritableArray textBlocksList = Arguments.createArray();
       for (int i = 0; i < textBlocks.size(); ++i) {
