@@ -26,7 +26,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import androidx.core.os.ParcelableCompat;
 import androidx.core.os.ParcelableCompatCreatorCallbacks;
 import androidx.core.view.ViewCompat;

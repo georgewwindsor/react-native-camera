@@ -6,7 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.media.CamcorderProfile;
 import android.os.Build;
-import android.support.media.ExifInterface;
+import androidx.exifinterface.media.ExifInterface;
 import android.view.ViewGroup;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
@@ -228,7 +228,7 @@ public class RNCameraViewHelper {
 
 
   public static void emitPixelsProcessed(ViewGroup view, WritableArray data) {
-    PixelRecognizedEvent event = PixelRecognizedEvent.obtain(view.getId(), data);
+   PixelsProcessedEvent event = PixelsProcessedEvent.obtain(view.getId(), data);
     ReactContext reactContext = (ReactContext) view.getContext();
     reactContext.getNativeModule(UIManagerModule.class).getEventDispatcher().dispatchEvent(event);
   }

@@ -1,6 +1,6 @@
 package com.lwansbrough.RCTCamera;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.common.MapBuilder;
@@ -114,8 +114,8 @@ public class RCTCameraViewManager extends ViewGroupManager<RCTCameraView> {
         view.setBarcodeScannerEnabled(barcodeScannerEnabled);
     }
     @ReactProp(name = "onPixelsProcessed")
-    public void setPixelsEnabled(RCTCameraView view, boolean pixelsEnabled) {
-        view.setpixelsEnabled(pixelsEnabled);
+    public void setPixelEnabled(RCTCameraView view, boolean pixelsEnabled) {
+        view.setPixelEnabled(pixelsEnabled);
     }
 
 
