@@ -149,17 +149,6 @@ public class RNCameraView extends CameraView implements LifecycleEventListener, 
           new PixelsProcessedAsyncTask(delegate, data, width, height).execute();
         }
 
-   //     if (willCallBarCodeTask) {
-      //    barCodeScannerTaskLock = true;
-      //    BarCodeScannerAsyncTaskDelegate delegate = (BarCodeScannerAsyncTaskDelegate) cameraView;
-       //   new BarCodeScannerAsyncTask(delegate, mMultiFormatReader, data, width, height).execute();
-      //  }
-
-      //  if (willCallFaceTask) {
-       //   faceDetectorTaskLock = true;
-       //   FaceDetectorAsyncTaskDelegate delegate = (FaceDetectorAsyncTaskDelegate) cameraView;
-       //   new FaceDetectorAsyncTask(delegate, mFaceDetector, data, width, height, correctRotation, getResources().getDisplayMetrics().density, getFacing(), getWidth(), getHeight(), mPaddingX, mPaddingY).execute();
-      //  }
 
         if (willCallGoogleBarcodeTask) {
           googleBarcodeDetectorTaskLock = true;
@@ -503,6 +492,10 @@ public class RNCameraView extends CameraView implements LifecycleEventListener, 
 
  @Override
   public void onPixelsProcessedTaskCompleted() {
+
+    Log.d("RCTCamera", "PIXELS WERE PROCESSED");
+
+
     pixelsProcessedTaskLock = false;
   }
 

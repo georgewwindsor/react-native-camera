@@ -65,10 +65,13 @@ public class PixelsProcessedAsyncTask extends android.os.AsyncTask<Void, Void, V
     }
 
 
-   String rgbItems[]= decodeYUV420SP(mImageData,mWidth,mHeight);
+   WritableArray rgbItems= decodeYUV420SP(mImageData,mWidth,mHeight);
 
   Log.d(TAG, "PIXELS BEING PROCESSSSSE Final");
 
+
+                  mDelegate.onPixelsProcessed(rgbItems);
+                mDelegate.onPixelsProcessedTaskCompleted();
 
 
     return null;
@@ -76,13 +79,14 @@ public class PixelsProcessedAsyncTask extends android.os.AsyncTask<Void, Void, V
 
 
 
-  public String[] decodeYUV420SP( byte[] yuv420sp, int width, int height) {
+  public WritableArray decodeYUV420SP( byte[] yuv420sp, int width, int height) {
 
       final int frameSize = width * height;
 
-    Log.d(TAG, "PIXELS DECODE YUB");
+   // Log.d(TAG, "PIXELS DECODE YUB");
 int xr=0;
-      String rgb[]=new String[width*height];
+      WritableArray rgb=Arguments.createArray();
+
 
       int xAmount=mWidth/8;
       int yAmount=mHeight/7;
@@ -116,18 +120,18 @@ int xr=0;
 
       String xstring="#"+Integer.toHexString(r/1028)+Integer.toHexString(g/1028)+Integer.toHexString(b/1028);
 
-          rgb[xr]=xstring;
+          rgb.pushString(xstring);
 
            xr=xr+1;
- Log.d(TAG, "PIXELS R"+r);
+// Log.d(TAG, "PIXELS R"+r);
 
- Log.d(TAG, "PIXELS "+xstring);
+// Log.d(TAG, "PIXELS "+xstring);
 
 
 
           }
       }
-        Log.d(TAG, "PIXELS BEING PROCESSSSSE RETURN");
+    //    Log.d(TAG, "PIXELS BEING PROCESSSSSE RETURN");
 
       return rgb;
       }
