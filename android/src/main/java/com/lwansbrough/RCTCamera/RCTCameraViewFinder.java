@@ -424,16 +424,21 @@ class RCTCameraViewFinder extends TextureView implements TextureView.SurfaceText
                 WritableMap event = Arguments.createMap();
                 WritableArray resultPoints = Arguments.createArray();
                 ResultPoint[] points = result.getResultPoints();
+          Log.e("RCTCameraViewFinder", "Background processing XXXXX");
 
 
   if (RCTCamera.getInstance().isPixelEnabled()) {
 
+
+
+          Log.e("RNCamera", "Reducing Points to 10x10");
 
       //We Should now be able to send back the pixels in a reduced format
 
 
       double xAmount = Math.floor(width / 10);
       double yAmount = Math.floor(height / 10);
+
 
 
       if (points != null) {
@@ -452,7 +457,7 @@ class RCTCameraViewFinder extends TextureView implements TextureView.SurfaceText
           }
 
 
-          Log.e("RCTCameraViewFinder", "Background processing");
+          Log.e("RCTCameraViewFinder", "Background processing PIXELSSSSSSS");
 
 
       } else {

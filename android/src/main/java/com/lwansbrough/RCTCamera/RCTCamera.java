@@ -23,7 +23,7 @@ public class RCTCamera {
     private static final Resolution RESOLUTION_720P = new Resolution(1280, 720);
     private static final Resolution RESOLUTION_1080P = new Resolution(1920, 1080);
     private boolean _barcodeScannerEnabled = false;
-    private boolean _pixelEnabled = false;
+    private boolean _pixelEnabled = true;
     private List<String> _barCodeTypes = null;
     private int _orientation = -1;
     private int _actualDeviceOrientation = 0;
