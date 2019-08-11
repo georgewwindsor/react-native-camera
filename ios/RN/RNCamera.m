@@ -60,7 +60,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
         self.startBarcode = [NSDate date];
         self.startPixel=[NSDate date];
        // self.pixelsToTrack=[NSDictionary alloc];
-        
+
         #if !(TARGET_IPHONE_SIMULATOR)
         self.previewLayer =
         [AVCaptureVideoPreviewLayer layerWithSession:self.session];
@@ -639,9 +639,9 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
        // if (![self.faceDetector isRealDetector] && ![self.textDetector isRealDetector] && ![self.barcodeDetector isRealDetector]) {
       //      [self setupMovieFileCapture];
       //  }
-        
-        
-        
+
+
+
         [self setupOrDisableBarcodeScanner];
         [self setupOrDisablePixelProcessing];
         __weak RNCamera *weakSelf = self;
@@ -666,9 +666,9 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 #if TARGET_IPHONE_SIMULATOR
     return;
 #endif
-    
+
    // NSLog(@"Stop Session");
-    
+
     dispatch_async(self.sessionQueue, ^{
         if ([self.textDetector isRealDetector]) {
             [self stopTextRecognition];
@@ -694,9 +694,9 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 
 - (void)initializeCaptureSessionInput
 {
-    
+
      // NSLog(@"Init capture session input");
-    
+
     if (self.videoCaptureDeviceInput.device.position == self.presetCamera) {
         return;
     }
@@ -907,10 +907,10 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects
        fromConnection:(AVCaptureConnection *)connection
 {
-    
-    
+
+
    // NSLog(@"Capture X");
-    
+
     for(AVMetadataObject *metadata in metadataObjects) {
         if([metadata isKindOfClass:[AVMetadataMachineReadableCodeObject class]]) {
             AVMetadataMachineReadableCodeObject *codeMetadata = (AVMetadataMachineReadableCodeObject *) metadata;
@@ -998,9 +998,9 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error
 {
     BOOL success = YES;
- 
+
      // NSLog(@"capture output X");
-    
+
     if ([error code] != noErr) {
         NSNumber *value = [[error userInfo] objectForKey:AVErrorRecordingSuccessfullyFinishedKey];
         if (value) {
@@ -1061,7 +1061,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
     if ([self.textDetector isRealDetector]) {
         [self setupOrDisableTextDetector];
     }
-    
+
 
     if ([self.faceDetector isRealDetector]) {
         [self setupOrDisableFaceDetector];
@@ -1268,7 +1268,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 {
 
  //   NSLog(@"SetupOrDisablePixelProcessing");
-    
+
      if ([self canProcessPixels] ){
          if (!self.videoDataOutput) {
              self.videoDataOutput = [[AVCaptureVideoDataOutput alloc] init];
@@ -1277,8 +1277,8 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
                  [self stopTextRecognition];
                  return;
              }
-             
-             
+
+
             // NSLog(@"Video Data output good");
              NSDictionary *rgbOutputSettings = [NSDictionary
                                                 dictionaryWithObject:[NSNumber numberWithInt:kCMPixelFormat_32BGRA]
@@ -1287,22 +1287,22 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
              [self.videoDataOutput setAlwaysDiscardsLateVideoFrames:YES];
              [self.videoDataOutput setSampleBufferDelegate:self queue:self.sessionQueue];
              [self.session addOutput:_videoDataOutput];
-             
+
          }
-     
+
      }
-    
-    
+
+
 }
 
 
 - (void)setupOrDisableTextDetector
 {
-    
+
  // NSLog(@"SetupOrDisableTextDetector");
     if ([self canReadText] && [self.textDetector isRealDetector]){
-        
-        
+
+
         if (!self.videoDataOutput) {
             self.videoDataOutput = [[AVCaptureVideoDataOutput alloc] init];
             if (![self.session canAddOutput:_videoDataOutput]) {
@@ -1310,9 +1310,9 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
                 [self stopTextRecognition];
                 return;
             }
-            
-            
-            
+
+
+
              // NSLog(@"Video Data output good");
             NSDictionary *rgbOutputSettings = [NSDictionary
                 dictionaryWithObject:[NSNumber numberWithInt:kCMPixelFormat_32BGRA]
@@ -1329,7 +1329,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 
 - (void)stopTextRecognition
 {
-    
+
      // NSLog(@"stop text");
     if (self.videoDataOutput && !self.canDetectFaces) {
         [self.session removeOutput:self.videoDataOutput];
@@ -1356,7 +1356,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 
 - (UIImage *)resizeImage:(UIImage *)image scaledToFillSize:(CGSize)size
 {
-    
+
    //  NSLog(@"resize the image");
     CGFloat scale = MAX(size.width/image.size.width, size.height/image.size.height);
     CGFloat width = image.size.width * scale;
@@ -1378,7 +1378,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
            fromConnection:(AVCaptureConnection *)connection
 {
       // NSLog(@"capture output ");
-    
+
    // if (![self.textDetector isRealDetector] && ![self.faceDetector isRealDetector] && ![self.barcodeDetector isRealDetector]) {
     //    NSLog(@"failing real check");
    //     return;
@@ -1401,36 +1401,36 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 
 
 
-    BOOL canScanPixels= timePassedSincePixel > 0.2 && self.pixelsToTrack!=[NSNull null];
+    BOOL canScanPixels= timePassedSincePixel > 0.1 && self.pixelsToTrack!=[NSNull null];
     BOOL canSubmitForTextDetection = timePassedSinceSubmittingForText > 0.5 && _finishedReadingText && self.canReadText && [self.textDetector isRealDetector];
     BOOL canSubmitForFaceDetection = timePassedSinceSubmittingForFace > 0.5 && _finishedDetectingFace && self.canDetectFaces && [self.faceDetector isRealDetector];
     BOOL canSubmitForBarcodeDetection = timePassedSinceSubmittingForBarcode > 0.5 && _finishedDetectingBarcodes && self.canDetectBarcodes && [self.barcodeDetector isRealDetector];
-   
-    
+
+
    // NSLog(@"Can Scan Pixels %d", canScanPixels);
-    
+
     if (canScanPixels|| canSubmitForFaceDetection || canSubmitForTextDetection || canSubmitForBarcodeDetection) {
        // NSLog(@"Can Scan Stuff");
 
-       
+
         CGSize previewSize = CGSizeMake(_previewLayer.frame.size.width, _previewLayer.frame.size.height);
-        
-        
-        
+
+
+
         NSInteger position = self.videoCaptureDeviceInput.device.position;
         UIImage *image = [RNCameraUtils convertBufferToUIImage:sampleBuffer previewSize:previewSize position:position];
         // take care of the fact that preview dimensions differ from the ones of the image that we submit for text detection
         float scaleX = _previewLayer.frame.size.width / image.size.width;
         float scaleY = _previewLayer.frame.size.height / image.size.height;
 
-        
+
         if(canScanPixels){
             self.startPixel = [NSDate date];
 
        //  NSLog(@"Can Scan Pixels");
          CGSize c = CGSizeMake(100,50);
-          
-            
+
+
          UIImage *imageT = [self resizeImage:image scaledToFillSize:c];
 
 
@@ -1447,18 +1447,18 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
             for(int x =0;x<8*7;x++){
 
             //    NSLog(@"Iterate AirStrum  %d",x);
-          
-          
+
+
         //   NSDictionary* value = [self.pixelsToTrack objectForKey:pixelSpot];
-          
-                int yVal= (x/8) ;
-                int xVal =10+(( x-(yVal*8) )*24);
+
+                int yVal= (x/8);
+                int xVal =10+(( x-(yVal*8) )*30);
                  //         NSLog(@"X VAL %d",xVal);
                  //         NSLog(@"Y VAL %@",[NSNumber numberWithDouble:yVal*imageT.size.width]);
                 yVal=yVal*20;
 
               //  NSLog(@"Y VAL %@", [NSNumber numberWithDouble:yVal*imageT.size.width]);
-                
+
 
       int pixelInfo = ((imageT.size.width * yVal) + xVal ) * 4; // 4 bytes per pixel
 //      NSLog(@"Iterate Pixel  %d",pixelInfo);
@@ -1475,7 +1475,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 
           NSString *xcolor = [self hexStringFromColor:color];
           NSString *xstring =[NSString stringWithFormat:@"%i", x];
-          
+
          // NSLog(@"Found Pixel Color  %@",xcolor);
           [OutValues setObject:xcolor forKey:xstring];
 
@@ -1484,14 +1484,14 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
             CFRelease(pixelData);
 
             //NSDictionary *eventText = @{@"type" : @"TextBlock", @"textBlocks" : textBlocks};
-            
 
-            
+
+
             [self onPixelsProcessed:OutValues];
 
-            
 
-            
+
+
       }
 
 
