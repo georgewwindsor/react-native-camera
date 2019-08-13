@@ -18,7 +18,7 @@ import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
-
+import 	android.graphics.Matrix;
 import com.google.zxing.common.HybridBinarizer;
 import java.io.IOException;
 import org.reactnative.camera.utils.ImageDimensions;
@@ -64,10 +64,13 @@ public class PixelsProcessedAsyncTask extends android.os.AsyncTask<Void, Void, V
       return null;
     }
 
-
-   WritableArray rgbItems= decodeYUV420SP(mImageData,mWidth,mHeight);
-
+//rotateYUV420Degree90(mImageData,mWidth,mHeight)
+   WritableArray rgbItems= decodeYUV420SP2(mImageData,mWidth,mHeight);
+//rotateYUV420Degree180(rotateYUV420Degree90(mImageData,mWidth,mHeight),mWidth,mHeight)
   Log.d(TAG, "PIXELS BEING PROCESSSSSE Final");
+
+
+
 
 
                   mDelegate.onPixelsProcessed(rgbItems);
@@ -76,8 +79,107 @@ public class PixelsProcessedAsyncTask extends android.os.AsyncTask<Void, Void, V
 
     return null;
   }
+private  byte[] rotateYUV420Degree180(byte[] data, int imageWidth, int imageHeight) {
+    byte[] yuv = new byte[imageWidth * imageHeight * 3 / 2];
+    int i = 0;
+    int count = 0;
+    for (i = imageWidth * imageHeight - 1; i >= 0; i--) {
+        yuv[count] = data[i];
+        count++;
+    }
+    i = imageWidth * imageHeight * 3 / 2 - 1;
+    for (i = imageWidth * imageHeight * 3 / 2 - 1; i >= imageWidth
+            * imageHeight; i -= 2) {
+        yuv[count++] = data[i - 1];
+        yuv[count++] = data[i];
+    }
+    return yuv;
+}
 
 
+private byte[] rotateYUV420Degree90(byte[] data, int imageWidth, int imageHeight)
+{
+    byte [] yuv = new byte[imageWidth*imageHeight*3/2];
+    // Rotate the Y luma
+    int i = 0;
+    for(int x = 0;x < imageWidth;x++)
+    {
+        for(int y = imageHeight-1;y >= 0;y--)
+        {
+            yuv[i] = data[y*imageWidth+x];
+            i++;
+        }
+    }
+    // Rotate the U and V color components
+    i = imageWidth*imageHeight*3/2-1;
+    for(int x = imageWidth-1;x > 0;x=x-2)
+    {
+        for(int y = 0;y < imageHeight/2;y++)
+        {
+            yuv[i] = data[(imageWidth*imageHeight)+(y*imageWidth)+x];
+            i--;
+            yuv[i] = data[(imageWidth*imageHeight)+(y*imageWidth)+(x-1)];
+            i--;
+        }
+    }
+    return yuv;
+}
+
+
+
+public WritableArray decodeYUV420SP2( byte[] yuv420sp, int width,    int height) {
+
+  WritableArray rgb=Arguments.createArray();
+
+
+    final int frameSize = width * height;
+    int xAmount=mWidth/8;
+          int yAmount=mHeight/7;
+
+
+// define variables before loops (+ 20-30% faster algorithm o0`)
+int r, g, b, y1192, y, i, uvp, u, v;
+        for (int j = 0, yp = 0; j < height; j++) {
+            uvp = frameSize + (j >> 1) * width;
+            u = 0;
+        v = 0;
+
+
+        for (i = 0; i < width; i++, yp++) {
+            y = (0xff & ((int) yuv420sp[yp])) - 16;
+            if (y < 0)
+                y = 0;
+            if ((i & 1) == 0) {
+                v = (0xff & yuv420sp[uvp++]) - 128;
+                u = (0xff & yuv420sp[uvp++]) - 128;
+            }
+
+                y1192 = 1192 * y;
+                r = (y1192 + 1634 * v);
+                g = (y1192 - 833 * v - 400 * u);
+                b = (y1192 + 2066 * u);
+
+// Java's functions are faster then 'IFs'
+                    r = Math.max(0, Math.min(r, 262143));
+                g = Math.max(0, Math.min(g, 262143));
+                b = Math.max(0, Math.min(b, 262143));
+
+
+  if(j==0||j==xAmount||j==xAmount*2||j==xAmount*3||j==xAmount*4||j==xAmount*5||j==xAmount*6||j==xAmount*7){
+
+  if(i==0||i==yAmount||i==yAmount*2||i==yAmount*3||i==yAmount*4||i==yAmount*5||i==yAmount*6){
+
+      String xstring="#"+Integer.toHexString(r/1028)+Integer.toHexString(g/1028)+Integer.toHexString(b/1028);
+
+      rgb.pushString(xstring);
+
+              }
+               }
+            }
+        }
+ return rgb;
+
+    }
 
   public WritableArray decodeYUV420SP( byte[] yuv420sp, int width, int height) {
 
@@ -90,6 +192,9 @@ int xr=0;
 
       int xAmount=mWidth/8;
       int yAmount=mHeight/7;
+
+
+
 
 
 
