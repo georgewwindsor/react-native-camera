@@ -255,7 +255,7 @@ type PropsType = typeof View.props & {
   flashMode?: number | string,
   exposure?: number,
   barCodeTypes?: Array<string>,
-  pixelsToTrack:   Array<TrackedPixel>,
+
   googleVisionBarcodeType?: number,
   googleVisionBarcodeMode?: number,
   whiteBalance?: number | string,
@@ -395,7 +395,7 @@ export default class Camera extends React.Component<PropsType, StateType> {
     faceDetectionLandmarks: PropTypes.number,
     faceDetectionClassifications: PropTypes.number,
     barCodeTypes: PropTypes.arrayOf(PropTypes.string),
-    pixelsToTrack:PropTypes.arrayOf(PropTypes.number),
+
     googleVisionBarcodeType: PropTypes.number,
     googleVisionBarcodeMode: PropTypes.number,
     type: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -430,7 +430,7 @@ export default class Camera extends React.Component<PropsType, StateType> {
     whiteBalance: CameraManager.WhiteBalance.auto,
     faceDetectionMode: (CameraManager.FaceDetection || {}).fast,
     barCodeTypes: Object.values(CameraManager.BarCodeType),
-    pixelsToTrack:Object.values(CameraManager.PixelType),
+
     googleVisionBarcodeType: ((CameraManager.GoogleVisionBarcodeDetection || {}).BarcodeType || {})
       .None,
     googleVisionBarcodeMode: ((CameraManager.GoogleVisionBarcodeDetection || {}).BarcodeMode || {})
